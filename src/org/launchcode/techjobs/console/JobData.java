@@ -73,12 +73,41 @@ public class JobData {
         ArrayList<HashMap<String, String>> jobs = new ArrayList<>();
 
         for (HashMap<String, String> row : allJobs) {
+            HashMap<String, String> caselessRow = new HashMap<>();
+            for (String s: row.keySet()) {
+                caselessRow.put(s.toLowerCase(), (row.get(s)).toLowerCase());
+            }
 
-            String aValue = row.get(column);
+            String aValue = caselessRow.get(column.toLowerCase());
 
-            if (aValue.contains(value)) {
+            if (aValue.contains(value.toLowerCase())) {
                 jobs.add(row);
             }
+        }
+
+        return jobs;
+    }
+
+    public static ArrayList<HashMap<String, String>> findByValue(String value) {
+        // load data, if not already loaded
+        loadData();
+
+        ArrayList jobs = new ArrayList<HashMap<String, String>>();
+
+        for (HashMap<String, String> row : allJobs) {
+
+            for (String column : row.keySet()) {
+                String aValue = (row.get(column)).toLowerCase();
+
+                if (aValue.contains(value.toLowerCase())) {
+                    if (!jobs.contains(row)) {
+                        jobs.add(row);
+                        break;
+                    }
+
+                }
+            }
+
         }
 
         return jobs;
